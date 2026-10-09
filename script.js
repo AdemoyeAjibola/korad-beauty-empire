@@ -1,322 +1,150 @@
-/* ==========================================================================
-   KORAD BEAUTY EMPIRE — SITE SCRIPT
-   Basket (localStorage), product grid rendering, filters, nav toggle.
-   ========================================================================== */
+/* Cart, WhatsApp checkout, config filling and the contact form. */
+const CART_KEY = "korad-cart";
 
-const WHATSAPP_NUMBER = "2347041880706";
-const BASKET_KEY = "korad_basket_v1";
-
-/* ---------------- Nav toggle (mobile) ---------------- */
-function initNav() {
-  const toggle = document.querySelector(".nav-toggle");
-  const links = document.querySelector(".nav-links");
-  if (!toggle || !links) return;
-  toggle.addEventListener("click", () => {
-    const open = links.classList.toggle("open");
-    toggle.setAttribute("aria-expanded", open ? "true" : "false");
-  });
-  links.querySelectorAll("a").forEach(a => {
-    a.addEventListener("click", () => links.classList.remove("open"));
-  });
-}
-
-/* ---------------- Basket core ---------------- */
-function getBasket() {
+let memoryCart = [];   // used if the browser blocks storage, so the cart still works
+function getCart() {
   try {
-    const raw = localStorage.getItem(BASKET_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch (e) {
-    return [];
-  }
+    const saved = JSON.parse(localStorage.getItem(CART_KEY));
+    if (saved) return saved;
+  } catch (e) {}
+  return memoryCart;
+}
+function saveCart(cart) {
+  memoryCart = cart;
+  try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {}
+  renderCart();
 }
 
-function saveBasket(items) {
-  localStorage.setItem(BASKET_KEY, JSON.stringify(items));
-  renderBasket();
+function addToCart(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  const cart = getCart();
+  const hit = cart.find(i => i.id === id);
+  if (hit) hit.qty += 1;
+  else cart.push({ id, name: p.name + (p.size ? " (" + p.size + ")" : ""), price: p.price, qty: 1 });
+  saveCart(cart);
+  openDrawer();
+}
+function changeQty(id, delta) {
+  let cart = getCart();
+  const hit = cart.find(i => i.id === id);
+  if (!hit) return;
+  hit.qty += delta;
+  if (hit.qty <= 0) cart = cart.filter(i => i.id !== id);
+  saveCart(cart);
+}
+function removeItem(id) { saveCart(getCart().filter(i => i.id !== id)); }
+
+function cartTotals(cart) {
+  return {
+    known: cart.reduce((s, i) => s + (i.price ? i.price * i.qty : 0), 0),
+    unpriced: cart.some(i => i.price === null),
+    count: cart.reduce((s, i) => s + i.qty, 0)
+  };
 }
 
-function addToBasket(product) {
-  const items = getBasket();
-  const existing = items.find(i => i.id === product.id);
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    items.push({
-      id: product.id,
-      name: product.name,
-      size: product.size || "",
-      category: CATEGORY_LABELS[product.category] || product.category,
-      price: product.price,
-      qty: 1
-    });
-  }
-  saveBasket(items);
-}
-
-function removeFromBasket(id) {
-  const items = getBasket().filter(i => i.id !== id);
-  saveBasket(items);
-}
-
-function basketCount(items) {
-  return items.reduce((sum, i) => sum + i.qty, 0);
-}
-
-function basketTotal(items) {
-  return items.reduce((sum, i) => sum + (typeof i.price === "number" ? i.price * i.qty : 0), 0);
-}
-
-function renderBasket() {
-  const items = getBasket();
-  const countEl = document.querySelector(".basket-count");
-  const listEl = document.querySelector(".basket-items");
-  const totalEl = document.querySelector(".basket-total-value");
-  const fab = document.querySelector(".basket-fab");
-
-  if (fab) {
-    const count = basketCount(items);
-    if (countEl) {
-      countEl.textContent = count;
-      countEl.style.display = count > 0 ? "flex" : "none";
-    }
-  }
-
-  if (!listEl) return;
-
-  if (items.length === 0) {
-    listEl.innerHTML = '<div class="basket-empty">Your order is empty. Browse the shop and tap "Add to order" on anything you like.</div>';
-  } else {
-    listEl.innerHTML = items.map(i => {
-      const priceLabel = typeof i.price === "number"
-        ? "₦" + (i.price * i.qty).toLocaleString("en-NG") + (i.qty > 1 ? ` (×${i.qty})` : "")
-        : "Contact for price";
-      return `
-        <div class="basket-item">
-          <div>
-            <div class="basket-item-name">${escapeHtml(i.name)}${i.size ? " — " + escapeHtml(i.size) : ""}</div>
-            <div class="basket-item-cat">${escapeHtml(i.category)}${i.qty > 1 ? " · qty " + i.qty : ""}</div>
-          </div>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <div class="basket-item-price">${priceLabel}</div>
-            <button class="basket-item-remove" aria-label="Remove ${escapeHtml(i.name)}" data-remove="${i.id}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M18 6L6 18M6 6l12 12"/></svg>
-            </button>
-          </div>
-        </div>`;
-    }).join("");
-
-    listEl.querySelectorAll("[data-remove]").forEach(btn => {
-      btn.addEventListener("click", () => removeFromBasket(btn.getAttribute("data-remove")));
-    });
-  }
-
-  if (totalEl) {
-    totalEl.textContent = "₦" + basketTotal(items).toLocaleString("en-NG");
-  }
-}
-
-function escapeHtml(str) {
-  const div = document.createElement("div");
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-function buildWhatsAppMessage() {
-  const items = getBasket();
-  if (items.length === 0) {
-    return "Hi Korad Beauty Empire! I'd like to place an order.";
-  }
-  let msg = "Hi Korad Beauty Empire! I'd like to order:\n\n";
-  items.forEach(i => {
-    const priceLabel = typeof i.price === "number" ? "₦" + (i.price * i.qty).toLocaleString("en-NG") : "price to confirm";
-    msg += `• ${i.name}${i.size ? " (" + i.size + ")" : ""} x${i.qty} — ${priceLabel}\n`;
-  });
-  const total = basketTotal(items);
-  msg += `\nEstimated total: ₦${total.toLocaleString("en-NG")} (excludes items marked "price to confirm" and delivery fee)`;
-  msg += "\n\nPlease confirm availability, final total and delivery fee. Thank you!";
-  return msg;
-}
-
-function initBasketUI() {
-  const fab = document.querySelector(".basket-fab");
-  const panel = document.querySelector(".basket-panel");
-  const closeBtn = document.querySelector(".basket-close");
-  const checkoutBtn = document.querySelector(".basket-checkout");
-
-  if (fab && panel) {
-    fab.addEventListener("click", () => panel.classList.toggle("open"));
-  }
-  if (closeBtn && panel) {
-    closeBtn.addEventListener("click", () => panel.classList.remove("open"));
-  }
-  document.addEventListener("click", (e) => {
-    if (!panel || !panel.classList.contains("open")) return;
-    if (panel.contains(e.target) || (fab && fab.contains(e.target))) return;
-    panel.classList.remove("open");
-  });
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener("click", () => {
-      const text = encodeURIComponent(buildWhatsAppMessage());
-      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, "_blank");
-    });
-  }
-
-  renderBasket();
-}
-
-/* ---------------- Product card markup ---------------- */
-function jarSvg(seed) {
-  // A small deterministic set of CSS/SVG "jar" illustrations standing in for
-  // products without a clean photo, styled in the brand palette.
-  const palette = ["var(--rose)", "var(--gold)", "var(--sage)", "var(--rose-dark)"];
-  const c = palette[seed % palette.length];
-  return `
-  <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <ellipse cx="60" cy="100" rx="30" ry="6" fill="rgba(75,21,40,0.12)"/>
-    <rect x="32" y="42" width="56" height="52" rx="10" fill="${c}" opacity="0.85"/>
-    <rect x="32" y="42" width="56" height="14" rx="7" fill="var(--plum)" opacity="0.18"/>
-    <rect x="42" y="26" width="36" height="18" rx="4" fill="var(--gold)" opacity="0.9"/>
-    <circle cx="60" cy="18" r="9" fill="none" stroke="var(--gold)" stroke-width="2"/>
-  </svg>`;
-}
-
-function productCardHtml(p, index) {
-  const priceLabel = formatPrice(p.price);
-  const priceClass = p.price === null ? "pc-price contact" : "pc-price";
-  const brandLine = p.brand ? `<div class="pc-brand">${escapeHtml(p.brand)}</div>` : "";
-  const sizeLine = p.size ? `<p class="pc-size">${escapeHtml(p.size)}</p>` : "";
-  const disclaimer = p.supplement ? `<div class="pc-disclaimer">${SUPPLEMENT_DISCLAIMER}</div>` : "";
-
-  return `
-  <article class="product-card" data-id="${p.id}" data-category="${p.category}">
-    <div class="pc-visual" tabindex="0">
-      <div class="pc-jar">${jarSvg(index)}</div>
-      <div class="pc-label">
-        <div class="pc-label-title">${escapeHtml(p.name)}</div>
-      </div>
-      <div class="pc-reveal">
-        <strong>What it's for</strong>
-        <span>${escapeHtml(p.blurb || "")}</span>
-      </div>
-    </div>
-    <div class="pc-body">
-      <div class="pc-cat">${escapeHtml(CATEGORY_LABELS[p.category] || p.category)}</div>
-      ${brandLine}
-      <h3 class="pc-name">${escapeHtml(p.name)}</h3>
-      ${sizeLine}
-      <div class="pc-foot">
-        <div class="${priceClass}">${priceLabel}</div>
-        <button class="pc-add" data-add="${p.id}">Add to order</button>
-      </div>
-      ${disclaimer}
-    </div>
-  </article>`;
-}
-
-function renderProductGrid(products, mountSelector) {
-  const mount = document.querySelector(mountSelector);
-  if (!mount) return;
-  if (products.length === 0) {
-    mount.innerHTML = '<div class="empty-state">No products in this category yet.</div>';
+function renderCart() {
+  const cart = getCart();
+  const t = cartTotals(cart);
+  document.getElementById("cart-count").textContent = t.count;
+  const list = document.getElementById("cart-list");
+  const total = document.getElementById("cart-total");
+  if (!cart.length) {
+    list.innerHTML = `<li class="cart-empty">Your order is empty. Add products from the shop.</li>`;
+    total.innerHTML = "";
     return;
   }
-  mount.innerHTML = products.map((p, i) => productCardHtml(p, i)).join("");
+  list.innerHTML = cart.map(i => `
+    <li>
+      <span>${i.name}</span>
+      <span class="price">${i.price === null ? "Price on request" : formatNaira(i.price * i.qty)}</span>
+      <span class="qty">
+        <button data-qty="-1" data-id="${i.id}" aria-label="Decrease quantity of ${i.name}">&minus;</button>
+        <span>${i.qty}</span>
+        <button data-qty="1" data-id="${i.id}" aria-label="Increase quantity of ${i.name}">+</button>
+        <button class="rm" data-rm="${i.id}">Remove</button>
+      </span>
+    </li>`).join("");
+  total.innerHTML = `<span>Estimated total</span><span>${formatNaira(t.known)}${t.unpriced ? " + items to confirm" : ""}</span>`;
+}
 
-  mount.querySelectorAll("[data-add]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const id = btn.getAttribute("data-add");
-      const product = PRODUCTS.find(p => p.id === id);
-      if (!product) return;
-      addToBasket(product);
-      btn.textContent = "Added ✓";
-      btn.classList.add("added");
-      setTimeout(() => {
-        btn.textContent = "Add to order";
-        btn.classList.remove("added");
-      }, 1400);
-    });
+let lastFocus = null;
+function openDrawer() {
+  lastFocus = document.activeElement;
+  document.getElementById("drawer").classList.add("open");
+  document.getElementById("drawer").setAttribute("aria-hidden", "false");
+  document.getElementById("overlay").classList.add("open");
+  document.getElementById("cart-close").focus();
+}
+function closeDrawer() {
+  document.getElementById("drawer").classList.remove("open");
+  document.getElementById("drawer").setAttribute("aria-hidden", "true");
+  document.getElementById("overlay").classList.remove("open");
+  if (lastFocus) lastFocus.focus();
+}
+
+function checkout() {
+  const cart = getCart();
+  if (!cart.length) { window.open(waLink("Hello Korad Beauty Empire, I would like to place an order."), "_blank"); return; }
+  const t = cartTotals(cart);
+  const lines = cart.map(i => "- " + i.name + (i.qty > 1 ? " x" + i.qty : "") +
+    (i.price ? " (" + formatNaira(i.price * i.qty) + ")" : " (price to confirm)")).join("\n");
+  const msg = "Hello Korad Beauty Empire, I would like to place an order.\n\nItems:\n" + lines +
+    "\n\nEstimated total: " + formatNaira(t.known) + (t.unpriced ? " plus items to confirm" : "") +
+    "\n\nName:\nDelivery address:\nPhone number:";
+  window.open(waLink(msg), "_blank");
+}
+
+function applyConfig() {
+  document.querySelectorAll("[data-wa]").forEach(a => {
+    a.href = waLink(a.dataset.waText || "");
   });
-
-  // Tap-to-peel for touch devices (in addition to hover/focus in CSS)
-  mount.querySelectorAll(".pc-visual").forEach(v => {
-    v.addEventListener("click", () => {
-      v.closest(".product-card").classList.toggle("peeled");
-    });
+  document.querySelectorAll("[data-ig]").forEach(a => a.href = "https://instagram.com/" + SITE.instagram);
+  document.querySelectorAll("[data-tt]").forEach(a => a.href = "https://tiktok.com/@" + SITE.tiktok);
+  document.querySelectorAll("[data-phone]").forEach(el => el.textContent = SITE.phoneDisplay);
+  document.querySelectorAll("[data-cac]").forEach(el => el.textContent = SITE.cacNumber);
+  document.querySelectorAll("[data-legal]").forEach(el => el.textContent = SITE.legalName);
+  document.querySelectorAll("[data-min-price]").forEach(el => {
+    const prices = PRODUCTS.filter(p => p.category === el.dataset.minPrice && p.price).map(p => p.price);
+    if (prices.length) el.textContent = formatNaira(Math.min(...prices));
   });
 }
 
-/* ---------------- Shop page filters ---------------- */
-function initShopPage() {
-  const grid = document.querySelector("#product-grid");
-  if (!grid) return;
+function initSite() {
+  applyConfig();
+  renderCart();
+  document.getElementById("cart-open").addEventListener("click", openDrawer);
+  document.getElementById("cart-close").addEventListener("click", closeDrawer);
+  document.getElementById("overlay").addEventListener("click", closeDrawer);
+  document.getElementById("cart-checkout").addEventListener("click", checkout);
+  document.getElementById("cart-list").addEventListener("click", e => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    if (b.dataset.qty) changeQty(b.dataset.id, Number(b.dataset.qty));
+    if (b.dataset.rm) removeItem(b.dataset.rm);
+  });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
 
-  const params = new URLSearchParams(window.location.search);
-  let activeCategory = params.get("category") || "all";
-
-  const filterBar = document.querySelector("#filter-bar");
-  if (filterBar) {
-    filterBar.querySelectorAll(".filter-chip").forEach(chip => {
-      if (chip.dataset.filter === activeCategory) chip.classList.add("active");
-      else chip.classList.remove("active");
-
-      chip.addEventListener("click", () => {
-        activeCategory = chip.dataset.filter;
-        filterBar.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
-        chip.classList.add("active");
-        applyFilter();
-      });
-    });
-  }
-
-  function applyFilter() {
-    const list = activeCategory === "all" ? PRODUCTS : PRODUCTS.filter(p => p.category === activeCategory);
-    renderProductGrid(list, "#product-grid");
-  }
-
-  applyFilter();
-}
-
-/* ---------------- Contact form (Web3Forms) ---------------- */
-function initContactForm() {
-  const form = document.querySelector("#contact-form");
-  if (!form) return;
-  form.addEventListener("submit", async (e) => {
+  const form = document.getElementById("contact-form");
+  if (form) form.addEventListener("submit", async e => {
     e.preventDefault();
-    const submitBtn = form.querySelector("button[type=submit]");
-    const successEl = document.querySelector(".form-success");
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Sending…";
+    const status = document.getElementById("form-status");
+    const data = new FormData(form);
+    const text = "Hello Korad Beauty Empire.\n\n" + data.get("message") + "\n\nName: " + data.get("name") + "\nPhone: " + data.get("phone");
+    if (SITE.web3formsKey.indexOf("YOUR_") === 0) {      // key not added yet: use WhatsApp instead
+      window.open(waLink(text), "_blank");
+      status.textContent = "Opening WhatsApp so you can send your message.";
+      return;
+    }
+    data.append("access_key", SITE.web3formsKey);
+    status.textContent = "Sending...";
     try {
-      const res = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(Object.fromEntries(new FormData(form)))
-      });
-      const data = await res.json();
-      if (data.success) {
-        form.reset();
-        if (successEl) successEl.classList.add("show");
-      } else {
-        alert("Something went wrong sending your message. Please try WhatsApp instead.");
-      }
+      const res = await fetch("https://api.web3forms.com/submit", { method: "POST", body: data });
+      const json = await res.json();
+      status.textContent = json.success ? "Thank you. We will reply shortly." : "That did not send. Please message us on WhatsApp instead.";
+      if (json.success) form.reset();
     } catch (err) {
-      alert("Something went wrong sending your message. Please try WhatsApp instead.");
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Send message";
+      status.textContent = "That did not send. Please message us on WhatsApp instead.";
     }
   });
 }
-
-/* ---------------- Boot ---------------- */
-document.addEventListener("DOMContentLoaded", () => {
-  initNav();
-  initBasketUI();
-  initShopPage();
-  initContactForm();
-
-  // Home page featured products (first 6)
-  if (document.querySelector("#featured-grid")) {
-    renderProductGrid(PRODUCTS.filter(p => p.category === "kits" || p.category === "face-creams").slice(0, 6), "#featured-grid");
-  }
-});
