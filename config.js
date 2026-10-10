@@ -9,8 +9,28 @@ const SITE = {
   tiktok: "koradbeautyempire",
   // Free key from https://web3forms.com (enter your email, they send you a key).
   // Until you add it, the contact form simply opens WhatsApp with the message filled in.
+  // The scrolling strip at the top of every page. Keep these true. Use {phone} for the phone number.
+  // Only add offers such as free samples or pickup if Korad really offers them.
+  ticker: [
+    "Lagos delivery in 24 to 48 hours",
+    "Outside Lagos in 2 to 5 working days",
+    "Order on WhatsApp {phone}",
+    "Delivery across Nigeria",
+    "Full payment before processing",
+    "CAC registered business"
+  ],
   web3formsKey: "YOUR_WEB3FORMS_ACCESS_KEY_HERE"
 };
+
+/* The moving strip at the very top of every page. Add, remove or reword lines freely.
+   Only list offers that are true, for example:  "Free sample with every order (while stock lasts)" */
+SITE.announcements = [
+  "Lagos delivery 24 to 48 hours",
+  "Outside Lagos 2 to 5 working days",
+  "Delivery across Nigeria",
+  "Order on WhatsApp " + SITE.phoneDisplay,
+  "Skincare, bodycare and supplements"
+];
 
 function waLink(text) {
   return "https://wa.me/" + SITE.whatsapp + (text ? "?text=" + encodeURIComponent(text) : "");

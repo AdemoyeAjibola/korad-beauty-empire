@@ -1,16 +1,21 @@
-/* Korad Beauty Empire product catalog. This is the only file you need to edit to
-   add, remove, rename or reprice products. See HOW-TO-UPDATE.md for the steps.
+/* Korad Beauty Empire product catalog. This is the only file you edit to add, remove,
+   rename or reprice products. See HOW-TO-UPDATE.md.
+
+   PHOTOS NEED NO EDITING HERE. Save a photo in images/products/ named after the product
+   (lowercase, hyphens): "Deluxe Face Cream" -> deluxe-face-cream.jpg. It appears on its own.
+   PRODUCT-PHOTO-NAMES.md lists the exact file name for every product.
 
    Fields
      id        unique short code, never reuse one (e.g. "fc12")
-     name      product name as customers see it
+     name      product name as customers see it (also decides the photo file name)
      size      optional, e.g. "500ml"
      brand     optional, shown for stocked supplements
-     category  must match one of the names in CATEGORY_ORDER below, exactly
+     category  must match a name in CATEGORY_ORDER below, exactly
      price     number in naira (12000), or null to show "Contact for price"
-     image     optional file name inside images/products/ (e.g. "deluxe-face-cream.jpg")
      note      optional one-line description
-     soldOut   optional, true shows a "Sold out" button instead of "Add to order" */
+     featured  optional, true shows the product in "Customer favourites" on the home page
+     soldOut   optional, true shows "Sold out" instead of the order buttons
+     image     optional override: a file name in images/products/ if you cannot rename a photo */
 
 const PRODUCTS = [
   // ---- Full Kits ----
@@ -21,9 +26,9 @@ const PRODUCTS = [
   { id: "fk5", name: "Moroccan Kit", category: "Full Kits", price: 85000 },
 
   // ---- Face Creams ----
-  { id: "fc1", name: "Whitening Face Cream", category: "Face Creams", price: 12000 },
+  { id: "fc1", featured: true, name: "Whitening Face Cream", category: "Face Creams", price: 12000 },
   { id: "fc2", name: "Lightening Face Cream", category: "Face Creams", price: 10000 },
-  { id: "fc3", name: "Deluxe Face Cream", category: "Face Creams", price: 14000 },
+  { id: "fc3", featured: true, name: "Deluxe Face Cream", category: "Face Creams", price: 14000 },
   { id: "fc4", name: "7D Face Cream", category: "Face Creams", price: 13000 },
   { id: "fc5", name: "Redness Face Cream", category: "Face Creams", price: 6000 },
   { id: "fc6", name: "Sunburn Face Cream", category: "Face Creams", price: 7000 },
@@ -55,11 +60,11 @@ const PRODUCTS = [
   { id: "cl4", name: "Knuckles Cleanser", category: "Cleansers", price: 7000 },
 
   // ---- Body Scrubs ----
-  { id: "sc1", name: "Coffee Body Scrub", category: "Body Scrubs", price: 15000 },
+  { id: "sc1", featured: true, name: "Coffee Body Scrub", category: "Body Scrubs", price: 15000 },
   { id: "sc2", name: "Glow Body Polish Scrub", category: "Body Scrubs", price: 20000 },
 
   // ---- Serums & Toners ----
-  { id: "se1", name: "Vit C Face Serum", category: "Serums & Toners", price: 12000 },
+  { id: "se1", featured: true, name: "Vit C Face Serum", category: "Serums & Toners", price: 12000 },
   { id: "se2", name: "Redness Face Serum", category: "Serums & Toners", price: 12000 },
   { id: "se3", name: "Nature Body Serum", category: "Serums & Toners", price: 10000 },
   { id: "se4", name: "Renew Face Toner", category: "Serums & Toners", price: 9000 },
@@ -74,8 +79,8 @@ const PRODUCTS = [
 
   // ---- Body Creams ----
   { id: "bc1", name: "Deluxe Body Milk", size: "500ml", category: "Body Creams", price: 30000 },
-  { id: "bc2", name: "Caramel Body Milk", size: "500ml", category: "Body Creams", price: 24000 },
-  { id: "bc3", name: "Whitening Body Milk", size: "500ml", category: "Body Creams", price: 25000 },
+  { id: "bc2", featured: true, name: "Caramel Body Milk", size: "500ml", category: "Body Creams", price: 24000 },
+  { id: "bc3", featured: true, name: "Whitening Body Milk", size: "500ml", category: "Body Creams", price: 25000 },
   { id: "bc4", name: "Lightening Body Milk", size: "500ml", category: "Body Creams", price: 27000 },
   { id: "bc5", name: "Natural Fairness Body Cream", size: "500ml", category: "Body Creams", price: 24000 },
   { id: "bc6", name: "Dark Spot Body Cream", size: "500ml", category: "Body Creams", price: 25000 },
@@ -89,7 +94,7 @@ const PRODUCTS = [
 
   // ---- Baby Care (no confirmed price yet) ----
   {
-    id: "baby1", image: "baby-body-butter.jpg", name: "Baby Body Butter Moisturizer", size: "200g / 7.05oz",
+    id: "baby1", featured: true, name: "Baby Body Butter Moisturizer", size: "200g / 7.05oz",
     category: "Baby Care", price: null,
     note: "Shea butter, cocoa butter, sweet almond oil, coconut oil & vitamin E. Paraben-free, sulfate-free, phthalate-free. Safe from day 1."
   },
@@ -97,12 +102,12 @@ const PRODUCTS = [
   // ---- Brightening Collection (separate line, no confirmed price yet) ----
   { id: "bg1", name: "Brightening Face Wash", category: "Brightening Collection", price: null, note: "Vitamin C & Turmeric. Deep cleansing, radiant glow." },
   { id: "bg2", name: "Brightening Body Lotion", size: "300ml", category: "Brightening Collection", price: null, note: "Niacinamide & Vitamin C. For brighter, even-tone skin." },
-  { id: "bg3", image: "brightening-body-butter.jpg", name: "Brightening Body Butter", size: "250g", category: "Brightening Collection", price: null, note: "Shea Butter & Niacinamide." },
+  { id: "bg3", name: "Brightening Body Butter", size: "250g", category: "Brightening Collection", price: null, note: "Shea Butter & Niacinamide." },
   { id: "bg4", name: "Skin Glow Face Serum", size: "30ml", category: "Brightening Collection", price: null, note: "Hyaluronic Acid & Vitamin C." },
-  { id: "bg5", image: "brightening-soap.jpg", name: "Brightening Soap", size: "200g", category: "Brightening Collection", price: null, note: "Kojic Acid & Glutathione." },
+  { id: "bg5", name: "Brightening Soap", size: "200g", category: "Brightening Collection", price: null, note: "Kojic Acid & Glutathione." },
 
   // ---- Supplements (stocked third-party brands, not Korad's own formulation) ----
-  { id: "su1", image: "collagen-peptides.jpg", name: "Grassfed Collagen Peptides + Vitamin C & Biotin", brand: "NeoCell", size: "180 tablets", category: "Supplements", price: null, note: "6000mg per serving. Supports healthy hair, skin & nails." },
+  { id: "su1", featured: true, name: "Grassfed Collagen Peptides + Vitamin C & Biotin", brand: "NeoCell", size: "180 tablets", category: "Supplements", price: null, note: "6000mg per serving. Supports healthy hair, skin & nails." },
   { id: "su2", name: "Women's Probiotic", brand: "Spring Valley", size: "30 vegetarian capsules", category: "Supplements", price: null, note: "Allergen-free, 1 billion CFU, digestive health support." },
   { id: "su3", name: "Magnesium", brand: "Spring Valley", size: "60 vegetarian capsules", category: "Supplements", price: null, note: "High absorption, sleep, rest & muscle health." },
   { id: "su4", name: "Ashwagandha", brand: "Spring Valley", size: "60 vegetarian capsules", category: "Supplements", price: null, note: "Extra strength stress support." },
@@ -112,7 +117,7 @@ const PRODUCTS = [
   { id: "su8", name: "Vitamin C", category: "Supplements", price: null, note: "Immune health support." },
   { id: "su9", name: "Vitamin B12", brand: "Spring Valley", category: "Supplements", price: null, note: "Metabolism support." },
   { id: "su10", name: "Goodbye Stress", category: "Supplements", price: null, note: "GABA, L-theanine & lemon balm." },
-  { id: "su11", image: "maca-cordyceps.jpg", name: "Maca Cordyceps Extra Strength (Men Power)", brand: "DUOZI", size: "60 tablets", category: "Supplements", price: null, note: "Energy, sexual health, athletic performance, immune function, stress relief & cognitive support (per label)." },
+  { id: "su11", name: "Maca Cordyceps Extra Strength (Men Power)", brand: "DUOZI", size: "60 tablets", category: "Supplements", price: null, note: "Energy, sexual health, athletic performance, immune function, stress relief & cognitive support (per label)." },
 ];
 
 const CATEGORY_ORDER = [
@@ -128,17 +133,17 @@ const CATEGORY_INTRO = {
     text: "Complete routines in a single order. Message us on WhatsApp to confirm exactly what is inside each kit."
   },
   "Brightening Collection": {
-    image: "brightening-cluster.jpg",
+   
     alt: "Korad brightening body lotion, face wash, face serum and soap",
     text: "Face wash with vitamin C and turmeric, body lotion with niacinamide and vitamin C, body butter with shea butter and niacinamide, face serum with hyaluronic acid and vitamin C, and soap with kojic acid and glutathione."
   },
   "Baby Care": {
-    image: "baby-butter-jars.jpg",
+   
     alt: "Korad Baby Body Butter Moisturizer jar and lid",
     text: "Made with shea butter, cocoa butter, sweet almond oil, coconut oil and vitamin E. Free from parabens, sulfates, phthalates, mineral oil and artificial colour. For babies from day 1."
   },
   "Supplements": {
-    image: "supplements-group.jpg",
+   
     alt: "Selection of supplements stocked by Korad Beauty Empire",
     text: "Supplements we stock from other brands, including NeoCell, Spring Valley, Nature's Bounty and Finest Nutrition. They are sold in their original packaging and are not made by Korad.",
     fine: "These statements have not been evaluated by the FDA. These products are not intended to diagnose, treat, cure, or prevent any disease. Use as a food supplement only."

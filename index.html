@@ -8,12 +8,12 @@
 <meta property="og:title" content="Korad Beauty Empire | Skincare, bodycare and supplements in Nigeria">
 <meta property="og:description" content="Face creams, body creams, soaps, serums, oils and full skincare kits from Korad Beauty Empire, Lagos. Supplements too. Delivery across Nigeria, order on WhatsApp.">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#3a1220">
 <link rel="icon" href="images/logo-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/work-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -22,71 +22,111 @@
   <section class="hero">
     <div class="wrap">
       <div class="hero-copy">
-        <h1>Glow with confidence.</h1>
-        <p class="lede">Face creams, body creams, soaps, serums, oils and complete skincare kits from Lagos, plus supplements for hair, skin and general wellness. Delivered across Nigeria.</p>
-        <div class="btn-row">
+        <p class="kicker reveal">Skincare and supplements, delivered across Nigeria</p>
+        <h1 class="reveal" style="--d:.1s">Glow with <em>confidence.</em></h1>
+        <p class="lede reveal" style="--d:.2s">Face creams, body creams, soaps, serums, oils and complete skincare kits from Lagos, plus supplements for hair, skin and general wellness.</p>
+        <div class="btn-row reveal" style="--d:.3s">
           <a class="btn" href="shop.html">Shop all products</a>
           <a class="btn outline" data-wa data-wa-text="Hello Korad Beauty Empire, I have a question." target="_blank" rel="noopener">Order on WhatsApp</a>
         </div>
-        <p class="hero-note">Lagos orders arrive in 24 to 48 hours. Other states take 2 to 5 working days.</p>
+        <p class="hero-note reveal" style="--d:.4s">Lagos orders arrive in 24 to 48 hours. Other states take 2 to 5 working days.</p>
       </div>
-      <div class="hero-img">
-        <img src="images/hero-products.jpg" alt="Korad caramel body soap, whitening body milk cream and face cream jars arranged among garden flowers">
+      <div class="hero-art reveal" style="--d:.2s">
+        <div class="arch"><img src="images/hero-products.jpg" alt="Korad caramel body soap, whitening body milk cream and face cream jars arranged among garden flowers"></div>
+        <div class="orb"><img src="images/brightening-cluster.jpg" alt="Korad brightening body lotion, face wash, serum and soap"></div>
+        <div class="spin" aria-hidden="true">
+          <svg viewBox="0 0 120 120"><defs><path id="ring" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0"/></defs>
+            <text><textPath href="#ring" textLength="280" lengthAdjust="spacing">Beauty · Confidence · Empire · Beauty · Confidence · Empire ·</textPath></text></svg>
+          <b>K</b>
+        </div>
       </div>
+    </div>
+  </section>
+
+  <section class="trust">
+    <div class="wrap">
+      <div class="t reveal"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg><div><h3>Delivery across Nigeria</h3><p>Lagos in 24 to 48 hours, other states in 2 to 5 working days</p></div></div>
+      <div class="t reveal" style="--d:.08s"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg><div><h3>Order on WhatsApp</h3><p>Send your list in one tap, we confirm everything with you</p></div></div>
+      <div class="t reveal" style="--d:.16s"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg><div><h3>Pay, then we dispatch</h3><p>Full payment is required before an order is processed</p></div></div>
+      <div class="t reveal" style="--d:.24s"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><div><h3>Registered business</h3><p>CAC registration no. <span data-cac></span></p></div></div>
     </div>
   </section>
 
   <section>
     <div class="wrap">
-      <div class="sec-head"><h2>Shop by collection</h2><a class="link" href="shop.html">View everything</a></div>
+      <div class="sec-head reveal"><div><h2>Shop by <em>collection</em></h2></div><a class="link" href="shop.html">View everything</a></div>
       <div class="tiles">
-        <a class="tile" href="shop.html#brightening-collection">
-          <div class="img"><img src="images/brightening-cluster.jpg" alt="Korad brightening body lotion, face wash, serum and soap on a marble stand" loading="lazy"></div>
-          <h3>Brightening Collection</h3><p>Vitamin C, niacinamide, kojic acid</p>
+        <a class="tile reveal" href="shop.html#brightening-collection">
+          <img src="images/brightening-cluster.jpg" alt="Korad brightening body lotion, face wash, serum and soap on a marble stand" loading="lazy">
+          <div class="cap"><h3>Brightening Collection</h3><p>Vitamin C, niacinamide, kojic acid</p><span class="go">Shop now</span></div>
         </a>
-        <a class="tile" href="shop.html#body-creams">
-          <div class="img"><img src="images/hero-products.jpg" alt="Korad caramel and whitening body creams and soaps" loading="lazy" style="object-position:center 60%"></div>
-          <h3>Caramel and Whitening</h3><p>Body milk, soaps, face creams</p>
+        <a class="tile reveal" style="--d:.1s" href="shop.html#body-creams">
+          <img src="images/hero-products.jpg" alt="Korad caramel and whitening body creams and soaps" loading="lazy" style="object-position:center 62%">
+          <div class="cap"><h3>Caramel and Whitening</h3><p>Body milk, soaps, face creams</p><span class="go">Shop now</span></div>
         </a>
-        <a class="tile" href="shop.html#baby-care">
-          <div class="img"><img src="images/baby-butter-jars.jpg" alt="Korad Baby Body Butter Moisturizer" loading="lazy" style="object-position:30% center"></div>
-          <h3>Baby Care</h3><p>Baby body butter, safe from day 1</p>
+        <a class="tile reveal" style="--d:.2s" href="shop.html#baby-care">
+          <img src="images/baby-butter-jars.jpg" alt="Korad Baby Body Butter Moisturizer" loading="lazy" style="object-position:32% center">
+          <div class="cap"><h3>Baby Care</h3><p>Baby body butter, safe from day 1</p><span class="go">Shop now</span></div>
         </a>
-        <a class="tile" href="shop.html#supplements">
-          <div class="img"><img src="images/supplements-group.jpg" alt="Supplements including probiotics, magnesium, zinc and multivitamin gummies" loading="lazy"></div>
-          <h3>Supplements</h3><p>Collagen, vitamins, probiotics and more</p>
+        <a class="tile reveal" style="--d:.3s" href="shop.html#supplements">
+          <img src="images/supplements-group.jpg" alt="Supplements including probiotics, magnesium, zinc and multivitamin gummies" loading="lazy">
+          <div class="cap"><h3>Supplements</h3><p>Collagen, vitamins, probiotics</p><span class="go">Shop now</span></div>
         </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="type-band" aria-hidden="true">
+    <div class="marquee"><div class="marquee-track" data-repeat><span class="marquee-group"><span class="item">Beauty</span><span class="item">Confidence</span><span class="item">Empire</span></span></div></div>
+  </div>
+
+  <section class="cream">
+    <div class="wrap">
+      <div class="sec-head reveal"><div><h2>Shop by <em>concern</em></h2><p class="sec-sub">Pick a concern to see the matching products.</p></div></div>
+      <div class="chips reveal">
+        <a class="chip" href="shop.html?q=dark%20spot">Dark spots</a>
+        <a class="chip" href="shop.html?q=acne">Acne and pimples</a>
+        <a class="chip" href="shop.html?q=stretch">Stretch marks</a>
+        <a class="chip" href="shop.html?q=redness">Redness</a>
+        <a class="chip" href="shop.html?q=sunburn">Sunburn</a>
+        <a class="chip" href="shop.html?q=anti%20age">Anti-ageing</a>
+        <a class="chip" href="shop.html?q=whitening">Whitening</a>
+        <a class="chip" href="shop.html?q=caramel">Caramel</a>
+        <a class="chip" href="shop.html?q=kiddies">Kids</a>
+        <a class="chip" href="shop.html?q=scrub">Scrubs</a>
       </div>
     </div>
   </section>
 
   <section class="band">
     <div class="wrap">
-      <div>
+      <div class="reveal">
         <h2>Full skincare kits</h2>
         <p>Deluxe, Whitening, 7D, Caramel and Moroccan kits, from <span data-min-price="Full Kits"></span>.</p>
       </div>
-      <a class="btn light" href="shop.html#full-kits">View kits</a>
+      <a class="btn light reveal" style="--d:.1s" href="shop.html#full-kits">View kits</a>
     </div>
   </section>
 
   <section>
     <div class="wrap">
-      <div class="facts">
-        <div><h3>Delivery</h3><p>Within Lagos in 24 to 48 hours. Outside Lagos in 2 to 5 working days. The delivery fee depends on your location.</p></div>
-        <div><h3>Ordering and payment</h3><p>Build your order on this site and send it to us on WhatsApp. Full payment is required before an order is processed.</p></div>
-        <div><h3>Registered business</h3><p><span data-legal></span>, registered with the Corporate Affairs Commission, RN <span data-cac></span>.</p></div>
+      <div class="sec-head reveal"><div><h2>How ordering <em>works</em></h2></div></div>
+      <div class="steps">
+        <div class="step reveal"><h3>Choose your products</h3><p>Browse the shop and add what you want to your order.</p></div>
+        <div class="step reveal" style="--d:.12s"><h3>Send it on WhatsApp</h3><p>One tap sends your list to us. We confirm availability, the delivery fee and payment details.</p></div>
+        <div class="step reveal" style="--d:.24s"><h3>Pay and we deliver</h3><p>Full payment is required before processing. Lagos in 24 to 48 hours, other states in 2 to 5 working days.</p></div>
       </div>
     </div>
   </section>
 
   <section class="blush">
-    <div class="wrap split-band">
-      <div>
-        <h2>Korad Academy</h2>
-        <p style="max-width:56ch;margin:0">A practical, beginner-friendly training in formulating botanical skincare products from scratch. Certificate and formulation guide included.</p>
+    <div class="wrap teaser">
+      <img class="reveal" src="images/academy-botanical.jpg" alt="Korad Academy botanical training poster" loading="lazy">
+      <div class="reveal" style="--d:.1s">
+        <h2>Korad <em>Academy</em></h2>
+        <p style="max-width:54ch;margin:0">A practical, beginner-friendly training in formulating botanical skincare products from scratch. Certificate and formulation guide included.</p>
       </div>
-      <a class="btn outline" href="academy.html">See the training</a>
+      <a class="btn outline reveal" style="--d:.2s" href="academy.html">See the training</a>
     </div>
   </section>
 </main>

@@ -110,8 +110,33 @@ function applyConfig() {
   });
 }
 
+function initMotion() {
+  document.querySelectorAll("[data-repeat]").forEach(track => {
+    if (track.dataset.done) return;
+    const one = track.innerHTML;
+    track.innerHTML = one.repeat(4);
+    track.dataset.done = "1";
+  });
+  const els = document.querySelectorAll(".reveal");
+  if (!("IntersectionObserver" in window)) { els.forEach(e => e.classList.add("in")); return; }
+  const io = new IntersectionObserver(entries => entries.forEach(en => {
+    if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+  }), { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+  els.forEach(e => io.observe(e));
+  const orb = document.querySelector(".orb");
+  if (orb && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let ticking = false;
+    addEventListener("scroll", () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { orb.style.setProperty("--py", (-Math.min(scrollY, 600) * 0.09) + "px"); ticking = false; });
+    }, { passive: true });
+  }
+}
+
 function initSite() {
   applyConfig();
+  initMotion();
   renderCart();
   document.getElementById("cart-open").addEventListener("click", openDrawer);
   document.getElementById("cart-close").addEventListener("click", closeDrawer);

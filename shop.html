@@ -8,37 +8,35 @@
 <meta property="og:title" content="Shop | Korad Beauty Empire">
 <meta property="og:description" content="Browse the full Korad Beauty Empire catalog: kits, face creams, soaps, serums, oils, body creams, baby care, brightening collection and supplements.">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#3a1220">
 <link rel="icon" href="images/logo-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/work-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <div id="site-header"></div>
 <main id="main">
-  <section class="page-title">
+  <section class="page-hero">
     <div class="wrap">
-      <h1>Shop</h1>
+      <h1>The <em>shop</em></h1>
       <p>Add what you want to your order, then send it to us on WhatsApp. We confirm availability, the delivery fee and payment details there.</p>
     </div>
   </section>
 
-  <section style="padding-top:0">
-    <div class="wrap">
-      <div class="shop-tools">
-        <nav class="cat-nav" id="cat-nav" aria-label="Product categories"></nav>
-        <input type="search" id="search" placeholder="Search products" aria-label="Search products">
-      </div>
-      <div id="catalog"></div>
+  <div class="wrap">
+    <div class="shop-tools">
+      <nav class="cat-nav" id="cat-nav" aria-label="Product categories"></nav>
+      <input type="search" id="search" placeholder="Search products" aria-label="Search products">
     </div>
-  </section>
+    <div id="catalog" style="min-height:60vh"></div>
+  </div>
 
-  <section class="blush">
+  <section class="blush" style="margin-top:70px">
     <div class="wrap narrow">
-      <h2>Delivery and payment</h2>
+      <h2>Delivery and <em>payment</em></h2>
       <table class="table">
         <tr><td>Within Lagos</td><td>24 to 48 hours</td></tr>
         <tr><td>Outside Lagos</td><td>2 to 5 working days</td></tr>

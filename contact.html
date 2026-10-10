@@ -8,35 +8,38 @@
 <meta property="og:title" content="Contact | Korad Beauty Empire">
 <meta property="og:description" content="Contact Korad Beauty Empire on WhatsApp, Instagram or TikTok. Delivery across Nigeria.">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#3a1220">
 <link rel="icon" href="images/logo-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/work-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <div id="site-header"></div>
 <main id="main">
-  <section class="page-title">
+  <section class="page-hero">
     <div class="wrap">
-      <h1>Contact</h1>
+      <h1>Get in <em>touch</em></h1>
       <p>WhatsApp is the fastest way to reach us, for orders and for questions about any product.</p>
     </div>
   </section>
 
-  <section style="padding-top:12px">
+  <section style="padding-top:64px">
     <div class="wrap two-col">
-      <div>
+      <div class="reveal">
+        <div class="wa-card">
+          <div><h3>Chat on WhatsApp</h3><p><span data-phone></span></p></div>
+          <a class="btn" data-wa target="_blank" rel="noopener">Start chat</a>
+        </div>
         <dl class="details" style="grid-template-columns:130px 1fr">
-          <dt>WhatsApp</dt><dd><a class="link" data-wa target="_blank" rel="noopener"><span data-phone></span></a></dd>
           <dt>Instagram</dt><dd><a class="link" data-ig target="_blank" rel="noopener">@koradbeautyempire</a></dd>
           <dt>TikTok</dt><dd><a class="link" data-tt target="_blank" rel="noopener">@koradbeautyempire</a></dd>
           <dt>Location</dt><dd>Lagos State, Nigeria</dd>
         </dl>
 
-        <h2 id="delivery" style="margin-top:2em">Delivery and payment</h2>
+        <h2 id="delivery" style="margin-top:2em">Delivery and <em>payment</em></h2>
         <table class="table">
           <tr><td>Within Lagos</td><td>24 to 48 hours</td></tr>
           <tr><td>Outside Lagos</td><td>2 to 5 working days</td></tr>
@@ -45,8 +48,8 @@
         </table>
       </div>
 
-      <div>
-        <h2>Send a message</h2>
+      <div class="reveal" style="--d:.12s">
+        <h2>Send a <em>message</em></h2>
         <form id="contact-form">
           <div class="form-field"><label for="name">Your name</label><input id="name" name="name" required autocomplete="name"></div>
           <div class="form-field"><label for="phone">Phone number</label><input id="phone" name="phone" type="tel" required autocomplete="tel"></div>
