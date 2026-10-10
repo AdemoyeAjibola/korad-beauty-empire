@@ -19,6 +19,8 @@ const SITE = {
     "Full payment before processing",
     "CAC registered business"
   ],
+  // true = web addresses show /shop instead of /shop.html (needs a host that supports it, see HOW-TO-UPDATE.md)
+  cleanUrls: true,
   web3formsKey: "YOUR_WEB3FORMS_ACCESS_KEY_HERE"
 };
 

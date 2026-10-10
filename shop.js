@@ -59,7 +59,7 @@
       const b = e.target.closest("button[data-cat]");
       if (!b) return;
       state.cat = b.dataset.cat;
-      history.replaceState(null, "", state.cat === "All" ? "shop.html" : "#" + slug(state.cat));
+      history.replaceState(null, "", state.cat === "All" ? location.pathname + location.search : "#" + slug(state.cat));
       renderTabs(); render();
     });
     document.getElementById("search").addEventListener("input", e => { state.q = e.target.value; render(); });

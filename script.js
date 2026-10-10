@@ -134,8 +134,42 @@ function initMotion() {
   }
 }
 
+/* Clean web addresses: shop.html shows as /shop, index.html as /.
+   Only runs on a real website (not when you double-click the file on your computer). */
+function applyCleanUrls(force) {
+  if (!SITE.cleanUrls) return;
+  if (!force && !/^https?:$/.test(location.protocol)) return;
+  document.querySelectorAll("a[href]").forEach(a => {
+    const h = a.getAttribute("href");
+    if (/^([a-z]+:|#|\/\/)/i.test(h)) return;
+    a.setAttribute("href", h.replace(/^index\.html/, "./").replace(/^([a-z-]+)\.html/i, "$1"));
+  });
+  if (/\.html$/.test(location.pathname)) {
+    const p = location.pathname.replace(/index\.html$/, "").replace(/\.html$/, "");
+    history.replaceState(null, "", (p || "/") + location.search + location.hash);
+  }
+}
+
+function initChrome() {
+  const header = document.getElementById("site-header");
+  const bar = document.createElement("div");
+  bar.className = "progress";
+  bar.setAttribute("aria-hidden", "true");
+  document.body.appendChild(bar);
+  const update = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    header.classList.toggle("scrolled", scrollY > 8);
+    bar.style.transform = "scaleX(" + (max > 0 ? Math.min(1, scrollY / max) : 0) + ")";
+  };
+  addEventListener("scroll", update, { passive: true });
+  addEventListener("resize", update);
+  update();
+}
+
 function initSite() {
   applyConfig();
+  applyCleanUrls();
+  initChrome();
   initMotion();
   renderCart();
   document.getElementById("cart-open").addEventListener("click", openDrawer);

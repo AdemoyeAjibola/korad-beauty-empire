@@ -5,14 +5,14 @@ const NAV_LINKS = [
 ];
 
 function currentPage() {
-  const p = location.pathname.split("/").pop();
-  return p === "" ? "index.html" : p;
+  const p = location.pathname.split("/").pop().replace(/\.html$/, "");
+  return p === "" ? "index" : p;
 }
 
 function renderChrome() {
   const cur = currentPage();
   const links = NAV_LINKS.map(([href, label]) =>
-    `<a href="${href}"${href === cur ? ' aria-current="page"' : ""}>${label}</a>`).join("");
+    `<a href="${href}"${href.replace(/\.html$/, "") === cur ? ' aria-current="page"' : ""}>${label}</a>`).join("");
 
   const items = SITE.ticker.map(t => `<span class="item">${t.replace("{phone}", SITE.phoneDisplay)}</span>`).join("");
   document.body.insertAdjacentHTML("afterbegin",
